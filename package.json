@@ -6,8 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
-  },
+    "lint": "next lint",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f app",
+    "docker:prisma": "docker-compose exec app npx prisma",
+    "docker:seed": "docker-compose exec app npx prisma db seed"
+    },
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "dotenv": "^17.2.3",
