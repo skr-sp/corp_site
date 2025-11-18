@@ -18,6 +18,8 @@ services:
             - DIRECT_URL=postgresql://postgres:postgres@db:5432/corp_site?schema=public
             - NEXTAUTH_URL=http://localhost:3000
             - NEXTAUTH_SECRET=your-dev-secret-key-here
+            - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+            - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
         depends_on:
             db:
                 condition: service_healthy
