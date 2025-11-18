@@ -12,24 +12,28 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async session({ session, user }) {
-            if (session.user) {
-                session.user.id = user.id
-                // DBからユーザー情報を取得してroleを追加
+        async jwt({ token, user, account }) {
+            // 初回ログイン時
+            if (user) {
+                token.id = user.id
                 const dbUser = await prisma.user.findUnique({
                     where: { id: user.id },
                     select: { role: true },
                 })
-                session.user.role = dbUser?.role || 'EDITOR'
+                token.role = dbUser?.role || 'EDITOR'
+            }
+            return token
+        },
+        async session({ session, token }) {
+            if (session.user && token) {
+                session.user.id = token.id as string
+                session.user.role = token.role as any
             }
             return session
         },
     },
-    pages: {
-        signIn: '/auth/signin',
-        error: '/auth/error',
-    },
     session: {
-        strategy: 'database',
+        strategy: 'jwt',
     },
+    debug: true,
 }

@@ -1,17 +1,34 @@
-import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import Link from 'next/link'
 
-export default async function Home() {
-    const categories = await prisma.category.findMany()
+export default async function HomePage() {
+    const session = await getServerSession(authOptions)
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-24">
-            <h1 className="text-4xl font-bold">TechVision Inc.</h1>
-            <p className="mt-4">Categories: {categories.length}</p>
-            <ul className="mt-4">
-                {categories.map((cat) => (
-                    <li key={cat.id}>{cat.name}</li>
-                ))}
-            </ul>
-        </main>
+        <div className="flex min-h-screen items-center justify-center">
+            <div className="text-center">
+                <h1 className="text-4xl font-bold mb-4">TechVision</h1>
+                
+                {session ? (
+                    <div>
+                        <p className="mb-4">ようこそ、{session.user?.name}さん</p>
+                        <Link
+                            href="/admin/dashboard"
+                            className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+                        >
+                            管理画面へ
+                        </Link>
+                    </div>
+                ) : (
+                    <Link
+                        href="/api/auth/signin"
+                        className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+                    >
+                        ログイン
+                    </Link>
+                )}
+            </div>
+        </div>
     )
 }
