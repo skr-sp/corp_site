@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 export function AdminSidebar() {
     const pathname = usePathname()
+    const [isOpen, setIsOpen] = useState(false)
 
     const menuItems = [
         {
@@ -86,31 +88,84 @@ export function AdminSidebar() {
     ]
 
     return (
-        <aside className="w-64 bg-gray-900 text-white">
-            <div className="p-6">
-                <h1 className="text-xl font-bold">TechVision</h1>
-                <p className="text-sm text-gray-400">管理画面</p>
-            </div>
+        <>
+            {/* モバイル: ハンバーガーメニューボタン */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="fixed left-4 top-4 z-50 rounded-lg bg-gray-900 p-2 text-white lg:hidden"
+                aria-label="メニュー"
+            >
+                {isOpen ? (
+                    <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                ) : (
+                    <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+                )}
+            </button>
 
-            <nav className="px-3">
-                {menuItems.map((item) => {
-                    const isActive = pathname.startsWith(item.href)
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
-                                isActive
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-300 hover:bg-gray-800'
-                            }`}
-                        >
-                            {item.icon}
-                            <span>{item.name}</span>
-                        </Link>
-                    )
-                })}
-            </nav>
-        </aside>
+            {/* オーバーレイ（モバイルのみ） */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* サイドバー */}
+            <aside
+                className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-gray-900 text-white transition-transform duration-300 lg:static lg:translate-x-0 ${
+                    isOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
+            >
+                <div className="p-6">
+                    <h1 className="text-xl font-bold">TechVision</h1>
+                    <p className="text-sm text-gray-400">管理画面</p>
+                </div>
+
+                <nav className="px-3">
+                    {menuItems.map((item) => {
+                        const isActive = pathname.startsWith(item.href)
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsOpen(false)}
+                                className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+                                    isActive
+                                        ? 'bg-blue-600 text-white'
+                                        : 'text-gray-300 hover:bg-gray-800'
+                                }`}
+                            >
+                                {item.icon}
+                                <span>{item.name}</span>
+                            </Link>
+                        )
+                    })}
+                </nav>
+            </aside>
+        </>
     )
 }
