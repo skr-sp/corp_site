@@ -1,69 +1,108 @@
+'use client'
+
 import Link from 'next/link'
-import { Container } from './Container'
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export function Header() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const pathname = usePathname()
+
+    const navItems = [
+        { name: 'ホーム', href: '/' },
+        { name: 'サービス', href: '/services' },
+        { name: 'ブログ', href: '/blog' },
+        { name: '採用情報', href: '/careers' },
+        { name: 'お問い合わせ', href: '/contact' },
+    ]
+
+    const isActive = (href: string) => {
+        if (href === '/') return pathname === '/'
+        return pathname.startsWith(href)
+    }
+
     return (
-        <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
-            <Container>
-                <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <Link
-                        href="/"
-                        className="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
-                    >
-                        TechVision
-                    </Link>
+        <header className="border-b bg-white">
+            <div className="container mx-auto flex items-center justify-between px-4 py-4">
+                {/* ロゴ */}
+                <Link href="/" className="text-2xl font-bold text-blue-600">
+                    TechVision
+                </Link>
 
-                    {/* Navigation */}
-                    <nav className="hidden md:flex items-center space-x-8">
+                {/* デスクトップナビゲーション */}
+                <nav className="hidden md:flex md:gap-8">
+                    {navItems.map((item) => (
                         <Link
-                            href="/about"
-                            className="text-gray-600 hover:text-blue-600 transition-colors"
+                            key={item.href}
+                            href={item.href}
+                            className={`transition-colors ${
+                                isActive(item.href)
+                                    ? 'font-semibold text-blue-600'
+                                    : 'text-gray-600 hover:text-blue-600'
+                            }`}
                         >
-                            会社概要
+                            {item.name}
                         </Link>
-                        <Link
-                            href="/services"
-                            className="text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                            サービス
-                        </Link>
-                        <Link
-                            href="/blog"
-                            className="text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                            ブログ
-                        </Link>
-                        <Link
-                            href="/careers"
-                            className="text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                            採用情報
-                        </Link>
-                        <Link
-                            href="/contact"
-                            className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-colors"
-                        >
-                            お問い合わせ
-                        </Link>
-                    </nav>
+                    ))}
+                </nav>
 
-                    {/* Mobile Menu Button (後でハンバーガーメニュー実装) */}
-                    <button className="md:hidden text-gray-600">
+                {/* モバイルメニューボタン */}
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="md:hidden"
+                    aria-label="メニュー"
+                >
+                    {isMenuOpen ? (
                         <svg
                             className="h-6 w-6"
                             fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                         >
-                            <path d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                            />
                         </svg>
-                    </button>
-                </div>
-            </Container>
+                    ) : (
+                        <svg
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 6h16M4 12h16M4 18h16"
+                            />
+                        </svg>
+                    )}
+                </button>
+            </div>
+
+            {/* モバイルメニュー */}
+            {isMenuOpen && (
+                <nav className="border-t bg-white md:hidden">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsMenuOpen(false)}
+                            className={`block border-b px-4 py-3 transition-colors ${
+                                isActive(item.href)
+                                    ? 'bg-blue-50 font-semibold text-blue-600'
+                                    : 'text-gray-600 hover:bg-gray-50'
+                            }`}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </nav>
+            )}
         </header>
     )
 }
