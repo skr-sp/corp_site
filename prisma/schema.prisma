@@ -118,15 +118,17 @@ enum ContactStatus {
 
 // 採用情報
 model Job {
-    id          String   @id @default(cuid())
-    title       String
-    department  String
-    location    String
-    type        String
-    description String   @db.Text
-    published   Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id             String   @id @default(cuid())
+    title          String   // 職種名
+    department     String   // 部署
+    location       String   // 勤務地
+    type           String   // 雇用形態 (FULL_TIME, CONTRACT, PART_TIME)
+    description    String   @db.Text // 仕事内容
+    qualifications String   @db.Text // 応募資格
+    benefits       String   @db.Text // 待遇・福利厚生
+    published      Boolean  @default(false)
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
 
-    @@index([published])
+    @@map("jobs")
 }
