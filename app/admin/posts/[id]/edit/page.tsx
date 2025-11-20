@@ -57,7 +57,7 @@ export default async function EditPostPage({ params }: Props) {
                 content,
                 excerpt: excerpt || null,
                 published,
-                publishedAt: published ? (post.publishedAt || new Date()) : null,
+                publishedAt: published ? (post?.publishedAt || new Date()) : null,
                 categoryId,
             },
         })
