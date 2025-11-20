@@ -21,6 +21,13 @@ export function Header() {
         return pathname.startsWith(href)
     }
 
+    const handleMenuToggle = () => {
+        console.log('Menu toggle clicked, current state:', isMenuOpen)
+        setIsMenuOpen(!isMenuOpen)
+        // アラート追加（デバッグ用 - 後で削除）
+        alert(`Menu state: ${!isMenuOpen}`)
+    }
+
     return (
         <header className="border-b bg-white">
             <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -48,9 +55,10 @@ export function Header() {
 
                 {/* モバイルメニューボタン */}
                 <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="md:hidden"
+                    onClick={handleMenuToggle}
+                    className="z-50 p-2 md:hidden"
                     aria-label="メニュー"
+                    type="button"
                 >
                     {isMenuOpen ? (
                         <svg
