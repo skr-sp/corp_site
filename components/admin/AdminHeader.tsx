@@ -7,7 +7,7 @@ export function AdminHeader() {
 
     return (
         <header className="border-b border-gray-200 bg-white">
-            <div className="flex h-16 items-center justify-between px-6">
+            <div className="flex h-16 items-center justify-between px-6 pl-16 lg:pl-6">
                 <div>
                     <h2 className="text-lg font-semibold text-gray-900">
                         管理画面
@@ -40,7 +40,7 @@ export function AdminHeader() {
                                 </svg>
                             </div>
                         )}
-                        <div>
+                        <div className="hidden sm:block">
                             <p className="text-sm font-medium text-gray-900">
                                 {session?.user?.name}
                             </p>
